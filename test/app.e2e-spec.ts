@@ -1,18 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { TaskModule } from '../lib';
-
-const TestTask = {
-  name: 'TestTask',
-  cronTime: '0 * * * * *',
-  onTick: () => {
-    // tslint:disable-next-line: no-console
-    console.log('Test task is working');
-  },
-};
+import { INestApplication } from '@nestjs/common';
+import { TaskModule } from './../lib';
 
 describe('AppController (e2e)', () => {
-  let app;
+  let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test
@@ -20,9 +12,7 @@ describe('AppController (e2e)', () => {
         imports: [
           TaskModule.register({
             controller: true,
-            tasks: [
-              TestTask,
-            ],
+            tasks: [],
           }),
         ],
       })
@@ -34,8 +24,7 @@ describe('AppController (e2e)', () => {
 
   it('/ (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/tasks')
       .expect(200);
-      // .expect('Hello World!');
   });
 });

@@ -1,8 +1,7 @@
-import { Injectable, Optional, OnModuleInit, Inject, Logger } from '@nestjs/common';
+import { Injectable, Optional, OnModuleInit, Logger } from '@nestjs/common';
 import { TaskList } from './task-list.service';
 import { Task } from './common/task';
 import { Instanceble } from './interfaces/instanceble';
-import { APP_TASK_INSTANCEBLE } from '.';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -11,7 +10,7 @@ export class TaskService implements OnModuleInit {
 
   constructor(
     private taskListService: TaskList,
-    @Optional() @Inject(APP_TASK_INSTANCEBLE) private instanceService: Instanceble,
+    @Optional() private instanceService: Instanceble,
   ) {}
 
   public async onModuleInit() {

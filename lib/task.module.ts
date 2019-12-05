@@ -2,7 +2,7 @@ import { Module, Global, DynamicModule, Provider } from '@nestjs/common';
 import { TaskModuleParam, TaskModuleParamAsync } from './interfaces/task-module';
 import { TaskService } from './task.service';
 import { TaskList } from './task-list.service';
-import { APP_TASK_INSTANCEBLE } from '.';
+import { Instanceble } from '.';
 import { TaskController } from './task.controller';
 
 @Global()
@@ -21,7 +21,7 @@ export class TaskModule {
     );
 
     if (params.instanceble) providers.push({
-      provide: APP_TASK_INSTANCEBLE,
+      provide: Instanceble,
       useValue: params.instanceble,
     });
 
@@ -48,11 +48,8 @@ export class TaskModule {
     );
 
     if (params.instanceble) providers.push({
-      provide: APP_TASK_INSTANCEBLE,
-      useFactory: async () => {
-        const instance = await params.instanceble;
-        return instance;
-      },
+      provide: Instanceble,
+      useFactory: async () => await params.instanceble,
     });
 
     if (params.controller) controllers.push(TaskController);
