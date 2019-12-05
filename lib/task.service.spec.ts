@@ -3,7 +3,6 @@ import { TaskService } from './task.service';
 import { TaskList } from './task-list.service';
 import { Logger } from '@nestjs/common';
 import { Instanceble } from './interfaces/instanceble';
-import { APP_TASK_INSTANCEBLE } from '.';
 
 class Instance extends Instanceble {
   isMaster(): boolean {
@@ -36,7 +35,7 @@ describe('TaskService', () => {
           useValue: tasks,
         },
         {
-          provide: APP_TASK_INSTANCEBLE,
+          provide: Instanceble,
           useFactory: async () => {
             const ins = await getInstance();
             return ins;
