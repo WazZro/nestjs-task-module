@@ -1,6 +1,6 @@
 {
   "name": "nest-task-module",
-  "version": "0.0.8",
+  "version": "0.1.2",
   "description": "Task module for NestJS apps",
   "author": {
     "name": "Vadim Usinov",
@@ -30,6 +30,7 @@
     "@nestjs/cli": "^7.0.0",
     "@nestjs/common": "^7.0.0",
     "@nestjs/core": "^7.0.0",
+    "@nestjs/platform-express": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
     "@types/cron": "^1.7.2",
@@ -68,5 +69,9 @@
     },
     "coverageDirectory": "./coverage",
     "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WazZro/nestjs-task-module.git"
   }
 }

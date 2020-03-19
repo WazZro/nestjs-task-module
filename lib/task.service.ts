@@ -1,16 +1,15 @@
 import {
   Injectable,
-  Optional,
-  OnModuleInit,
-  Inject,
   Logger,
   OnModuleDestroy,
+  OnModuleInit,
+  Optional,
 } from '@nestjs/common';
-import { TaskList } from './task-list.service';
+import { Observable } from 'rxjs';
+import { CronJobParameter } from '.';
 import { Task } from './common/task';
 import { Instanceble } from './interfaces/instanceble';
-import { APP_TASK_INSTANCEBLE } from '.';
-import { Observable } from 'rxjs';
+import { TaskList } from './task-list.service';
 
 @Injectable()
 export class TaskService implements OnModuleInit, OnModuleDestroy {
@@ -18,9 +17,7 @@ export class TaskService implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     private taskListService: TaskList,
-    @Optional()
-    @Inject(APP_TASK_INSTANCEBLE)
-    private instanceService: Instanceble,
+    @Optional() private instanceService: Instanceble,
   ) {}
 
   public async onModuleInit() {
@@ -39,16 +36,41 @@ export class TaskService implements OnModuleInit, OnModuleDestroy {
     return Array.from(this.tasks.values());
   }
 
-  public startTask(name: string) {
+  /**
+   * Start task by name
+   * @param name - task name
+   */
+  public startTask(name: string): Task {
     const task = this.tasks.get(name);
     if (!task) return;
     task.start();
+
+    return task;
   }
 
-  public stopTask(name: string) {
+  /**
+   * Stop task by name
+   * @param name - task name
+   */
+  public stopTask(name: string): Task {
     const task = this.tasks.get(name);
     if (!task) return;
     task.stop();
+
+    return task;
+  }
+
+  /**
+   * Add new task.
+   *
+   * If task with the given name already exists, it will be replaced
+   * @param taskParam - params for new task
+   */
+  public addTask(taskParam: CronJobParameter): Task {
+    const task = new Task(taskParam);
+    this.tasks.set(task.name, task);
+
+    return task;
   }
 
   private async isMaster(): Promise<boolean> {
