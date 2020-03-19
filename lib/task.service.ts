@@ -1,4 +1,11 @@
-import { Injectable, Optional, OnModuleInit, Inject, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Optional,
+  OnModuleInit,
+  Inject,
+  Logger,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { TaskList } from './task-list.service';
 import { Task } from './common/task';
 import { Instanceble } from './interfaces/instanceble';
@@ -6,12 +13,14 @@ import { APP_TASK_INSTANCEBLE } from '.';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class TaskService implements OnModuleInit {
+export class TaskService implements OnModuleInit, OnModuleDestroy {
   private tasks: Map<string, Task> = new Map();
 
   constructor(
     private taskListService: TaskList,
-    @Optional() @Inject(APP_TASK_INSTANCEBLE) private instanceService: Instanceble,
+    @Optional()
+    @Inject(APP_TASK_INSTANCEBLE)
+    private instanceService: Instanceble,
   ) {}
 
   public async onModuleInit() {
@@ -20,6 +29,10 @@ export class TaskService implements OnModuleInit {
     }
 
     this.startTasks();
+  }
+
+  public onModuleDestroy() {
+    this.stopTasks();
   }
 
   public getTasks(): Task[] {
@@ -54,8 +67,7 @@ export class TaskService implements OnModuleInit {
   public async startTasks() {
     Logger.log('Tasks are starting', TaskService.name);
     const isMaster = await this.isMaster();
-    if (isMaster)
-      Logger.log('This instance is master', TaskService.name);
+    if (isMaster) Logger.log('This instance is master', TaskService.name);
 
     for (const task of this.tasks.values()) {
       if (isMaster) task.start();
