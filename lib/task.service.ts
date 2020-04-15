@@ -20,7 +20,7 @@ export class TaskService implements OnModuleInit, OnModuleDestroy {
     @Optional() private instanceService: Instanceble,
   ) {}
 
-  public async onModuleInit() {
+  public async onModuleInit(): Promise<void> {
     for (const taskParam of this.taskListService.getTasks()) {
       this.tasks.set(taskParam.name, new Task(taskParam));
     }
@@ -28,7 +28,7 @@ export class TaskService implements OnModuleInit, OnModuleDestroy {
     this.startTasks();
   }
 
-  public onModuleDestroy() {
+  public onModuleDestroy(): void {
     this.stopTasks();
   }
 
@@ -86,7 +86,7 @@ export class TaskService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  public async startTasks() {
+  public async startTasks(): Promise<void> {
     Logger.log('Tasks are starting', TaskService.name);
     const isMaster = await this.isMaster();
     if (isMaster) Logger.log('This instance is master', TaskService.name);
@@ -99,12 +99,14 @@ export class TaskService implements OnModuleInit, OnModuleDestroy {
       this.instanceService?.on('slave', () => task.stop());
     }
 
-    Logger.log('Tasks are started', TaskService.name);
+    Logger.log('Tasks have been started', TaskService.name);
   }
 
   public stopTasks(): void {
     for (const task of this.tasks.values()) {
       task.stop();
     }
+
+    Logger.log('Tasks were stopped', TaskService.name);
   }
 }
